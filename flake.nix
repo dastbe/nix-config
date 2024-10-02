@@ -33,7 +33,7 @@
       inherit overlays nixpkgs inputs;
     };
   in {
-    darwinConfigurations.macbook-air-m1 = mkSystem "macbook-air-m1" {
+    darwinConfigurations.personal-macbook-air-m1 = mkSystem "personal-macbook-air-m1" {
       system = "aarch64-darwin";
       user   = "dastbe";
       darwin = true;
