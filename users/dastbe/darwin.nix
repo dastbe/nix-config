@@ -18,6 +18,10 @@
     casks  = [
       "1password"
       "alacritty"
+      "arc"
+      "discord"
+      "google-chrome"
+      "slack"
     ];
   };
 

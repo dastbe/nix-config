@@ -17,20 +17,20 @@ in {
   home.packages = [
     pkgs.bat
     pkgs.eza
+    pkgs.fd
     pkgs.git-branchless
+    pkgs.gh
+    pkgs.go
     pkgs.gopls
     pkgs.helix
     pkgs.htop
     pkgs.hyperfine
     pkgs.ripgrep
+    pkgs.rustup
   ] ++ (lib.optionals isDarwin [
     # This is automatically setup on Linux
     pkgs.cachix
   ]);
-
-  home.sessionVariables = {
-    NIXNAME = "macbook-air-m1";
-  };
 
   #---------------------------------------------------------------------
   # Programs
@@ -55,7 +55,9 @@ in {
   programs.fzf = {
     enable = true;
 
-    enableZshIntegration = true;    
+    defaultOptions = [
+      "--preview 'bat --color=always {}'"
+    ];
   };
 
   programs.git = {
@@ -67,6 +69,20 @@ in {
     extraConfig = {
       init.defaultBranch = "main";
     };
+  };
+
+  programs.neovim = {
+    enable = true;
+
+    defaultEditor = true;
+    viAlias = true;
+    vimAlias = true;
+
+    plugins = [
+      pkgs.vimPlugins.copilot-vim
+      pkgs.vimPlugins.nvim-treesitter.withAllGrammars
+      pkgs.vimPlugins.vim-fugitive
+    ];
   };
 
   programs.starship = {
