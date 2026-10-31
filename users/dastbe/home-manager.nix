@@ -2,6 +2,9 @@
 
 let
   isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+
+  name = "David Bell";
+  email = "dastbe@gmail.com";
 in {
   # This value pins home-manager's defaults to the release this config was
   # first written against. Read the home-manager release notes before bumping.
@@ -12,8 +15,8 @@ in {
   #---------------------------------------------------------------------
 
   home.packages = [
+    pkgs.difftastic
     pkgs.fd
-    pkgs.git-branchless
     pkgs.go
     pkgs.gopls
     pkgs.htop
@@ -83,8 +86,8 @@ in {
     ignores = [ ".DS_Store" ];
 
     settings = {
-      user.name = "David Bell";
-      user.email = "dastbe@gmail.com";
+      user.name = name;
+      user.email = email;
       init.defaultBranch = "main";
     };
   };
@@ -94,6 +97,18 @@ in {
     defaultEditor = true;
 
     settings.theme = "sonokai_andromeda";
+  };
+
+  programs.jujutsu = {
+    enable = true;
+
+    settings = {
+      user = { inherit name email; };
+      ui = {
+        default-command = "log";
+        diff-formatter = [ "difft" "--color=always" "$left" "$right" ];
+      };
+    };
   };
 
   programs.starship = {
