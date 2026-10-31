@@ -21,6 +21,37 @@ when jj has no equivalent.
 - Push with `jj git push`. Ask before rewriting commits that are already on
   a remote, since that needs a force push.
 
+## Workspaces: one per Linear issue
+
+Do the work for each Linear issue (see Work tracking below) in its own jj
+workspace under `~/workplace/claude/<workspace-name>`, not in the checkout
+the session started in. That checkout is the user's, and its working copy
+may hold their in-progress change.
+
+- Name the workspace `<repo>-<issue-key>` in lowercase (e.g.
+  `mono-das-123`). The repo prefix matters because the directory is shared
+  across repos, and one issue can touch more than one repo.
+- If a workspace for the issue already exists, continue in it rather than
+  creating another. Check with `jj workspace list`.
+- Otherwise, create it from the user's checkout of the repo with
+  `jj workspace add ~/workplace/claude/<name> --name <name> --colocate -r <base>`,
+  where `<base>` is `trunk()` for new work (run `jj git fetch` first so
+  it's current) or the tip of the stack you're extending. Then read, edit,
+  build, and run jj from inside it.
+- Workspaces must be colocated with Git so git-aware tooling works in
+  them; `--colocate` gives the workspace its own Git worktree. It needs the
+  user's checkout to be colocated too. If it isn't, ask the user before
+  running `jj git colocation enable` there.
+- A workspace shares the repo store of the checkout it was created from,
+  so commits are visible from both and the user sees your changes in
+  `jj log` without any extra step. If you rewrite a commit their working
+  copy sits on, tell them to run `jj workspace update-stale`.
+- When the work has landed or been handed off, ask before cleaning up,
+  then run `jj workspace forget <name>`, delete the directory, and run
+  `git worktree prune` in the user's checkout to drop the stale Git
+  worktree (the one mutating `git` command allowed here, since jj has no
+  equivalent). Forgetting a workspace keeps its commits.
+
 ## Commit messages: `area: description`
 
 The first line is `area: description`.
