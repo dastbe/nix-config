@@ -59,6 +59,9 @@ in {
   in {
     enable = true;
 
+    # Written to ~/.claude/CLAUDE.md, which Claude Code loads in every repo.
+    context = ./agent-conventions.md;
+
     # The upstream plugin reads its settings from `/plugin config`; setting the
     # env directly keeps it declarative. The password stays in 1Password,
     # outside the nix store, and is read through the app integration.
