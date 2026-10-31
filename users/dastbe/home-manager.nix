@@ -162,6 +162,9 @@ in {
 
     settings = {
       user = { inherit name email; };
+      # Colocate new repos and workspaces with Git, so git-aware tooling
+      # works in them (agent workspaces rely on this).
+      git.colocate = true;
       ui = {
         default-command = "log";
         diff-formatter = [ "difft" "--color=always" "$left" "$right" ];
