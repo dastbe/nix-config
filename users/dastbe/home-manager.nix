@@ -1,11 +1,10 @@
 { lib, pkgs, ... }:
 
 let
-  isDarwin = pkgs.stdenv.isDarwin;
-  isLinux = pkgs.stdenv.isLinux;
+  isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
 in {
-  # Home-manager 22.11 requires this be set. We never set it so we have
-  # to use the old state version.
+  # This value pins home-manager's defaults to the release this config was
+  # first written against. Read the home-manager release notes before bumping.
   home.stateVersion = "18.09";
 
   #---------------------------------------------------------------------
@@ -61,10 +60,9 @@ in {
   programs.git = {
     enable = true;
 
-    userName = "David Bell";
-    userEmail = "dastbe@gmail.com";
-
-    extraConfig = {
+    settings = {
+      user.name = "David Bell";
+      user.email = "dastbe@gmail.com";
       init.defaultBranch = "main";
     };
   };

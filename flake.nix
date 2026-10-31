@@ -2,28 +2,25 @@
   description = "NixOS systems and tools";
 
   inputs = {
-    # Pin our primary nixpkgs repository. This is the main nixpkgs repository
-    # we'll use for our configurations. Be very careful changing this because
-    # it'll impact your entire system.
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
-    alacritty-theme = { 
+    alacritty-theme = {
       url = "github:alexghr/alacritty-theme.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    
+
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.05";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     darwin = {
-      url = "github:LnL7/nix-darwin";
+      url = "github:nix-darwin/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, alacritty-theme, home-manager, darwin, ... }@inputs: let
+  outputs = { nixpkgs, alacritty-theme, ... }@inputs: let
     # Overlays is the list of overlays we want to apply from flake inputs.
     overlays = [
       alacritty-theme.overlays.default

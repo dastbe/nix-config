@@ -1,17 +1,11 @@
-{ inputs, pkgs, ... }:
+{ pkgs, currentSystemUser, ... }:
 
 {
-  fonts = {
-    packages = with pkgs; [
-      recursive
-      (nerdfonts.override {
-        fonts = [
-          "FiraCode"
-          "JetBrainsMono"
-        ];
-      })
-    ];
-  };
+  fonts.packages = with pkgs; [
+    recursive
+    nerd-fonts.fira-code
+    nerd-fonts.jetbrains-mono
+  ];
 
   homebrew = {
     enable = true;
@@ -33,10 +27,7 @@
     };
   };
 
-  security.pam.enableSudoTouchIdAuth = true;
+  security.pam.services.sudo_local.touchIdAuth = true;
 
-  users.users.dastbe= {
-    home = "/Users/dastbe";
-    # shell = pkgs.zsh;
-  };
+  users.users.${currentSystemUser}.home = "/Users/${currentSystemUser}";
 }
