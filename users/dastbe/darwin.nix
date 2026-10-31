@@ -20,6 +20,7 @@
       "ghostty"
       "google-chrome"
       "slack"
+      "zed"
     ];
   };
 
