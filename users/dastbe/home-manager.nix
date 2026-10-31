@@ -15,6 +15,7 @@ in {
   #---------------------------------------------------------------------
 
   home.packages = [
+    pkgs.awscli2
     pkgs.claude-code
     pkgs.difftastic
     pkgs.fd
