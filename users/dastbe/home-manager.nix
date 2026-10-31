@@ -16,6 +16,10 @@ in {
 
   home.packages = [
     pkgs.awscli2
+    pkgs.bazelisk
+    # bazelisk only installs `bazelisk`; expose it as `bazel` for scripts and
+    # editors too, not just interactive shells.
+    (pkgs.writeShellScriptBin "bazel" ''exec ${pkgs.bazelisk}/bin/bazelisk "$@"'')
     pkgs.claude-code
     pkgs.difftastic
     pkgs.fd
