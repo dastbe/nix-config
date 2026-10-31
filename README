@@ -1,3 +1,9 @@
 # Nix Config
 
 Personal Nix configuration, heavily based upon https://github.com/mitchellh/nixos-config
+
+A system is a machine (`machines/<name>.nix`) combined with a user
+(`users/<user>/darwin.nix` + `users/<user>/home-manager.nix`) in `flake.nix`.
+Nix itself is installed with Determinate Nix, so nix-darwin does not manage it.
+
+    make switch NIXNAME=personal-macbook-air-m1

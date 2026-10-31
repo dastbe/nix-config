@@ -1,5 +1,5 @@
 {
-  description = "NixOS systems and tools";
+  description = "dastbe's nix-darwin + home-manager systems";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -28,5 +28,7 @@
       user   = "dastbe";
       darwin = true;
     };
+
+    formatter.aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixfmt-rfc-style;
   };
 }
