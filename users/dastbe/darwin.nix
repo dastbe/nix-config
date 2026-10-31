@@ -9,23 +9,21 @@
 
   homebrew = {
     enable = true;
-    casks  = [
+
+    # Make this list authoritative: casks removed here get uninstalled on the
+    # next switch. ("zap" would also delete app data; "uninstall" keeps it.)
+    onActivation.cleanup = "uninstall";
+
+    casks = [
       "1password"
       "alacritty"
-      "arc"
       "discord"
       "google-chrome"
       "slack"
     ];
   };
 
-  nixpkgs = {
-    config = {
-      allowBroken = true;
-      allowUnfree = true;
-      allowUnsupportedSystem = true;
-    };
-  };
+  nixpkgs.config.allowUnfree = true;
 
   security.pam.services.sudo_local.touchIdAuth = true;
 
