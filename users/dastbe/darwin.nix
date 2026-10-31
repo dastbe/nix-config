@@ -23,8 +23,12 @@
     ];
   };
 
-  # claude-code is unfree.
+  # claude-code and the 1Password CLI are unfree.
   nixpkgs.config.allowUnfree = true;
+
+  # Installs `op` at /usr/local/bin/op, the only path the 1Password app
+  # integration trusts.
+  programs._1password.enable = true;
 
   security.pam.services.sudo_local.touchIdAuth = true;
 

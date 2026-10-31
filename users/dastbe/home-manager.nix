@@ -20,7 +20,6 @@ in {
     # bazelisk only installs `bazelisk`; expose it as `bazel` for scripts and
     # editors too, not just interactive shells.
     (pkgs.writeShellScriptBin "bazel" ''exec ${pkgs.bazelisk}/bin/bazelisk "$@"'')
-    pkgs.claude-code
     pkgs.difftastic
     pkgs.fd
     pkgs.go
@@ -45,6 +44,46 @@ in {
   programs.bat = {
     enable = true;
     config.theme = "Catppuccin Frappe";
+  };
+
+  programs.claude-code = let
+    # Pinned instead of installed with `/plugin install`, so the MCP server and
+    # skills only change when this rev does.
+    unifi-mcp = pkgs.fetchFromGitHub {
+      owner = "sirkirby";
+      repo = "unifi-mcp";
+      rev = "9493e7bb83dece24e4a4ac8adb1f4ad16f81e5ec";
+      hash = "sha256-N4uLdSJ1YPyWSjwYjiNn0DKopGALnhbxieEs49WVjN4=";
+    };
+    unifiSkills = "${unifi-mcp}/plugins/unifi-network/skills";
+  in {
+    enable = true;
+
+    # The upstream plugin reads its settings from `/plugin config`; setting the
+    # env directly keeps it declarative. The password stays in 1Password,
+    # outside the nix store, and is read through the app integration.
+    mcpServers.unifi-network = {
+      command = "${pkgs.uv}/bin/uvx";
+      args = [ "unifi-network-mcp==0.43.1" ];
+      env = {
+        UNIFI_NETWORK_HOST = "10.1.0.1";
+        UNIFI_NETWORK_USERNAME = "claude";
+        UNIFI_NETWORK_PASSWORD_COMMAND = "/usr/local/bin/op read op://Claude/unifi-network-mcp/password";
+        # Read-only until I trust it. Mutations would still preview first.
+        UNIFI_POLICY_NETWORK_CREATE = "false";
+        UNIFI_POLICY_NETWORK_UPDATE = "false";
+        UNIFI_POLICY_NETWORK_DELETE = "false";
+        UNIFI_NETWORK_TOOL_PERMISSION_MODE = "confirm";
+      };
+    };
+
+    # The setup and support skills write config imperatively, so skip them.
+    skills = {
+      unifi-network = "${unifiSkills}/unifi-network";
+      network-health-check = "${unifiSkills}/network-health-check";
+      firewall-auditor = "${unifiSkills}/firewall-auditor";
+      firewall-manager = "${unifiSkills}/firewall-manager";
+    };
   };
 
   programs.eza = {
