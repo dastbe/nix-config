@@ -15,12 +15,14 @@ in {
   #---------------------------------------------------------------------
 
   home.packages = [
+    pkgs.claude-code
     pkgs.difftastic
     pkgs.fd
     pkgs.go
     pkgs.gopls
     pkgs.htop
     pkgs.hyperfine
+    pkgs.nil
     pkgs.ripgrep
     pkgs.rustup
   ] ++ (lib.optionals isDarwin [
@@ -75,6 +77,8 @@ in {
     settings = {
       theme = "Catppuccin Frappe";
       font-family = "FiraCode Nerd Font Mono";
+      # Zellij's default keybindings are Alt-based.
+      macos-option-as-alt = true;
       # Shift+Enter inserts a newline in Claude Code (and other TUIs).
       keybind = [ "shift+enter=text:\\x1b\\r" ];
     };
@@ -111,8 +115,29 @@ in {
     };
   };
 
+  # Claude through opencode needs an Anthropic API key (Claude Pro/Max
+  # subscriptions aren't usable in third-party tools). The key is kept out of
+  # the nix store: run `opencode auth login` once and pick Anthropic.
+  programs.opencode = {
+    enable = true;
+
+    settings = {
+      model = "anthropic/claude-opus-5-5";
+      small_model = "anthropic/claude-haiku-5-5";
+    };
+  };
+
   programs.starship = {
     enable = true;
+  };
+
+  programs.zellij = {
+    enable = true;
+
+    settings = {
+      theme = "catppuccin-frappe";
+      show_startup_tips = false;
+    };
   };
 
   programs.zoxide = {
