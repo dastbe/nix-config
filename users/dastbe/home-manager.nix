@@ -12,11 +12,8 @@ in {
   #---------------------------------------------------------------------
 
   home.packages = [
-    pkgs.bat
-    pkgs.eza
     pkgs.fd
     pkgs.git-branchless
-    pkgs.gh
     pkgs.go
     pkgs.gopls
     pkgs.htop
@@ -32,12 +29,38 @@ in {
   # Programs
   #---------------------------------------------------------------------
 
+  # Managing bat here (rather than as a bare package) makes home-manager
+  # rebuild bat's theme/syntax cache on every switch, so it never goes stale
+  # across bat upgrades.
+  programs.bat = {
+    enable = true;
+    config.theme = "Catppuccin Frappe";
+  };
+
+  programs.eza = {
+    enable = true;
+    git = true;
+    extraOptions = [ "--binary" "--group" ];
+  };
+
   programs.fzf = {
     enable = true;
 
-    defaultOptions = [
-      "--preview 'bat --color=always {}'"
-    ];
+    defaultCommand = "fd --type f --hidden --exclude .git";
+    fileWidget = {
+      command = "fd --type f --hidden --exclude .git";
+      # Only preview files in the Ctrl-T file picker; a global preview breaks
+      # Ctrl-R history search, where {} is a command, not a file.
+      options = [ "--preview 'bat --color=always --style=numbers {}'" ];
+    };
+    changeDirWidget.command = "fd --type d --hidden --exclude .git";
+  };
+
+  programs.gh = {
+    enable = true;
+    # Use gh as the git credential helper for github.com.
+    gitCredentialHelper.enable = true;
+    settings.aliases.co = "pr checkout";
   };
 
   # Installed via the homebrew cask (darwin.nix); home-manager only writes
@@ -56,6 +79,8 @@ in {
 
   programs.git = {
     enable = true;
+
+    ignores = [ ".DS_Store" ];
 
     settings = {
       user.name = "David Bell";
@@ -77,8 +102,8 @@ in {
 
   programs.zoxide = {
     enable = true;
-
-    enableZshIntegration = true;    
+    # Replace `cd` with zoxide (keeps `cd -`, completion, etc. working).
+    options = [ "--cmd cd" ];
   };
 
   programs.zsh = {
@@ -90,8 +115,7 @@ in {
 
     shellAliases = {
       cat = "bat";
-      cd = "z";
-      ls = "eza --long --binary --group --git";
+      ls = "eza --long";
     };
   };
 }
