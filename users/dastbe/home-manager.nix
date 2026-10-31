@@ -33,28 +33,26 @@ in {
   # Programs
   #---------------------------------------------------------------------
 
-  programs.alacritty = {
-    enable = true;
-
-    settings = {
-      font.normal = { family = "FiraCode Nerd Font Mono"; style = "Regular"; };
-      
-      keyboard.bindings = [
-        { key = "K"; mods = "Command"; action = "ClearHistory"; }
-      ];
-
-      import = [
-        pkgs.alacritty-theme.catppuccin_frappe
-      ];
-    };
-  };
-
   programs.fzf = {
     enable = true;
 
     defaultOptions = [
       "--preview 'bat --color=always {}'"
     ];
+  };
+
+  # Installed via the homebrew cask (darwin.nix); home-manager only writes
+  # the config.
+  programs.ghostty = {
+    enable = true;
+    package = lib.mkIf isDarwin null;
+
+    settings = {
+      theme = "Catppuccin Frappe";
+      font-family = "FiraCode Nerd Font Mono";
+      # Shift+Enter inserts a newline in Claude Code (and other TUIs).
+      keybind = [ "shift+enter=text:\\x1b\\r" ];
+    };
   };
 
   programs.git = {

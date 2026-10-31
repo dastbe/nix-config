@@ -16,8 +16,8 @@
 
     casks = [
       "1password"
-      "alacritty"
       "discord"
+      "ghostty"
       "google-chrome"
       "slack"
     ];
