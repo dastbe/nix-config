@@ -19,7 +19,6 @@ in {
     pkgs.gh
     pkgs.go
     pkgs.gopls
-    pkgs.helix
     pkgs.htop
     pkgs.hyperfine
     pkgs.ripgrep
@@ -65,18 +64,11 @@ in {
     };
   };
 
-  programs.neovim = {
+  programs.helix = {
     enable = true;
-
     defaultEditor = true;
-    viAlias = true;
-    vimAlias = true;
 
-    plugins = [
-      pkgs.vimPlugins.copilot-vim
-      pkgs.vimPlugins.nvim-treesitter.withAllGrammars
-      pkgs.vimPlugins.vim-fugitive
-    ];
+    settings.theme = "sonokai_andromeda";
   };
 
   programs.starship = {
