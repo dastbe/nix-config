@@ -1,6 +1,4 @@
-{ inputs, ... }:
-
-{ config, lib, pkgs, ... }:
+{ lib, pkgs, ... }:
 
 let
   isDarwin = pkgs.stdenv.isDarwin;

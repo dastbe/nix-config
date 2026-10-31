@@ -1,5 +1,5 @@
-# This function creates a NixOS system based on our VM setup for a
-# particular architecture.
+# Builds a system by combining a machine (machines/<name>.nix) with a user
+# (users/<user>/{darwin,nixos}.nix + users/<user>/home-manager.nix).
 { nixpkgs, overlays, inputs }:
 
 name:
@@ -15,16 +15,22 @@ let
   userOSConfig = ../users/${user}/${if darwin then "darwin" else "nixos" }.nix;
   userHMConfig = ../users/${user}/home-manager.nix;
 
-  # NixOS vs nix-darwin functionst
+  # NixOS vs nix-darwin functions
   systemFunc = if darwin then inputs.darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem;
   home-manager = if darwin then inputs.home-manager.darwinModules else inputs.home-manager.nixosModules;
-in systemFunc rec {
-  inherit system;
+
+  # Extra arguments available to every module (system and home-manager) so
+  # they can parameterize on the machine/user they are being combined into.
+  specialArgs = {
+    inherit inputs;
+    currentSystem = system;
+    currentSystemName = name;
+    currentSystemUser = user;
+  };
+in systemFunc {
+  inherit system specialArgs;
 
   modules = [
-    # Apply our overlays. Overlays are keyed by system type so we have
-    # to go through and apply our system type. We do this first so
-    # the overlays are available globally.
     { nixpkgs.overlays = overlays; }
 
     machineConfig
@@ -32,20 +38,10 @@ in systemFunc rec {
     home-manager.home-manager {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
-      home-manager.users.${user} = import userHMConfig {
-        inputs = inputs;
-      };
-    }
-
-    # We expose some extra arguments so that our modules can parameterize
-    # better based on these values.
-    {
-      config._module.args = {
-        currentSystem = system;
-        currentSystemName = name;
-        currentSystemUser = user;
-        inputs = inputs;
-      };
+      # Move pre-existing unmanaged dotfiles aside instead of failing activation.
+      home-manager.backupFileExtension = "hm-backup";
+      home-manager.extraSpecialArgs = specialArgs;
+      home-manager.users.${user} = import userHMConfig;
     }
   ];
 }
