@@ -62,6 +62,13 @@ in {
     # Written to ~/.claude/CLAUDE.md, which Claude Code loads in every repo.
     context = ./agent-conventions.md;
 
+    settings = {
+      theme = "dark";
+      # Sessions work in per-session jj workspaces here (see
+      # agent-conventions.md), whichever checkout they started in.
+      permissions.additionalDirectories = [ "~/workplace/claude" ];
+    };
+
     # The upstream plugin reads its settings from `/plugin config`; setting the
     # env directly keeps it declarative. The password stays in 1Password,
     # outside the nix store, and is read through the app integration.
