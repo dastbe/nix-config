@@ -14,12 +14,17 @@
     # next switch. ("zap" would also delete app data; "uninstall" keeps it.)
     onActivation.cleanup = "uninstall";
 
+    taps = [
+      "anomalyco/tap"
+    ];
+
     casks = [
       "1password"
       "claude"
       "discord"
       "ghostty"
       "google-chrome"
+      "anomalyco/tap/hex"
       "slack"
       "zed"
     ];
