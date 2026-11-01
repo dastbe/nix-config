@@ -33,6 +33,16 @@ for tracking) live in `users/dastbe/agent-conventions.md`, which switch
 installs as `~/.claude/CLAUDE.md`. Edit them there. This file only adds what
 is specific to this repo.
 
+## Workspaces: work in this checkout
+
+This overrides the per-issue workspace rule in the user-level conventions.
+Make nix-cfg changes directly in `~/.nix-cfg`, not in a workspace under
+`~/workplace/claude`: `make switch` builds from this checkout, so changes
+made elsewhere aren't what gets activated.
+
+The working copy may still hold the user's in-progress change, so check
+`jj diff` and `jj log` first and start your own change with `jj new`.
+
 ## Publishing
 
 Every commit must build on its own. To publish a stack:
