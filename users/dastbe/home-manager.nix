@@ -210,6 +210,15 @@ in {
     defaultKeymap = "viins";
     enableCompletion = true;
 
+    # Rex prepends its bin dir to PATH in its terminals, but nix-darwin's
+    # /etc/zshenv resets PATH. Put it back so `rex` (and the Claude Code
+    # hook and skill that call it) resolve inside Rex.
+    envExtra = ''
+      if [[ -n "''${REX_BIN_DIR-}" ]]; then
+        path=("$REX_BIN_DIR" $path)
+      fi
+    '';
+
     shellAliases = {
       cat = "bat";
       ls = "eza --long";
