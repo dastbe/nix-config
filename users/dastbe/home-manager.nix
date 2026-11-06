@@ -67,6 +67,17 @@ in {
       # Sessions work in per-session jj workspaces here (see
       # agent-conventions.md), whichever checkout they started in.
       permissions.additionalDirectories = [ "~/workplace/claude" ];
+
+      # What `rex skill setup` would add, if settings.json weren't in the
+      # store. Tells each session which Rex session and block it runs in.
+      # Keep the command verbatim so `rex skill status` reports it current.
+      hooks.SessionStart = [{
+        hooks = [{
+          type = "command";
+          command = "/bin/sh -c 'rex __internal session-start --agent claude --feature-session-naming=false 2>/dev/null || true'";
+          timeout = 5;
+        }];
+      }];
     };
 
     # The upstream plugin reads its settings from `/plugin config`; setting the
