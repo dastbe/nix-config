@@ -56,6 +56,9 @@ in {
       hash = "sha256-N4uLdSJ1YPyWSjwYjiNn0DKopGALnhbxieEs49WVjN4=";
     };
     unifiSkills = "${unifi-mcp}/plugins/unifi-network/skills";
+    # Off for now: every session starts its own server, and each one asks
+    # 1Password for CLI access. Flip back once it reads a service account.
+    enableUnifi = false;
   in {
     enable = true;
 
@@ -83,7 +86,7 @@ in {
     # The upstream plugin reads its settings from `/plugin config`; setting the
     # env directly keeps it declarative. The password stays in 1Password,
     # outside the nix store, and is read through the app integration.
-    mcpServers.unifi-network = {
+    mcpServers.unifi-network = lib.mkIf enableUnifi {
       command = "${pkgs.uv}/bin/uvx";
       args = [ "unifi-network-mcp==0.43.1" ];
       env = {
@@ -99,7 +102,7 @@ in {
     };
 
     # The setup and support skills write config imperatively, so skip them.
-    skills = {
+    skills = lib.mkIf enableUnifi {
       unifi-network = "${unifiSkills}/unifi-network";
       network-health-check = "${unifiSkills}/network-health-check";
       firewall-auditor = "${unifiSkills}/firewall-auditor";
