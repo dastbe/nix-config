@@ -24,7 +24,22 @@ via `lib/mksystem.nix`:
 - Check the flake: `nix flake check`
 - Format: `nix fmt`
 - Activating (`make switch NIXNAME=personal-macbook-air-m1`) changes the
-  running system and needs sudo. Leave that to the user unless asked.
+  running system and needs sudo. Only switch when the user asks.
+- In a Rex terminal (`REX_BLOCK` is set), run the switch in a new pane
+  beside yours, so the user can approve sudo with Touch ID or decline:
+
+  ```sh
+  rex split -s "$REX_SESSION" -b "$REX_BLOCK" --label "make switch" \
+    --wait -c ~/.nix-cfg -- zsh -c 'make switch NIXNAME=personal-macbook-air-m1 && exit
+      s=$?; print -P "\n%F{red}make switch failed ($s)%f, press return to close"; read; exit $s'
+  ```
+
+  Run it in the background. The pane closes itself when the switch
+  succeeds. If it fails, the pane stays open until the user presses
+  return, so they can read the error. `--wait` returns the exit status
+  once the pane closes. Don't edit the checkout while it runs:
+  `darwin-rebuild` evaluates it again after sudo. Outside Rex, ask the
+  user to run the switch.
 
 ## Conventions
 
