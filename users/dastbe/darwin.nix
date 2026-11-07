@@ -24,6 +24,7 @@
       "discord"
       "ghostty"
       "google-chrome"
+      "granola"
       "anomalyco/tap/hex"
       "slack"
       "zed"
