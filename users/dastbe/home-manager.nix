@@ -6,6 +6,8 @@ let
   name = "David Bell";
   email = "dastbe@gmail.com";
 in {
+  imports = [ ./home/neovim ];
+
   # This value pins home-manager's defaults to the release this config was
   # first written against. Read the home-manager release notes before bumping.
   home.stateVersion = "18.09";

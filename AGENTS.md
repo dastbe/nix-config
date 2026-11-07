@@ -74,6 +74,7 @@ Every commit must build on its own. To publish a stack:
 | `home-manager`   | `users/<user>/home-manager.nix`               |
 | `claude-code`    | `programs.claude-code`, `users/<user>/agent-conventions.md` |
 | `agents`         | `AGENTS.md`                                   |
+| `neovim`         | `users/<user>/home/neovim/`                   |
 
 Areas also shape how the repo is organized. If a change doesn't fit an
 existing area, or an area keeps collecting unrelated changes, split the file
