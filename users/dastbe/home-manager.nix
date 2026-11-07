@@ -61,6 +61,48 @@ in {
     # Off for now: every session starts its own server, and each one asks
     # 1Password for CLI access. Flip back once it reads a service account.
     enableUnifi = false;
+
+    # Model, directory, the jj change at @, and subscription usage. Claude
+    # Code pipes session JSON on stdin; rate_limits only appears for
+    # subscribers, after the first response, so each piece is optional.
+    statusline = pkgs.writeShellApplication {
+      name = "claude-statusline";
+      runtimeInputs = [ pkgs.jq pkgs.jujutsu ];
+      text = ''
+        model="" dir="" five="" five_reset="" week=""
+        eval "$(jq -r '@sh "
+          model=\(.model.display_name // "")
+          dir=\(.workspace.current_dir // .cwd // "")
+          five=\(.rate_limits.five_hour.used_percentage // "" | if . == "" then . else round end)
+          five_reset=\(.rate_limits.five_hour.resets_at // "")
+          week=\(.rate_limits.seven_day.used_percentage // "" | if . == "" then . else round end)
+        "')"
+
+        dim=$'\e[2m' reset=$'\e[0m'
+
+        # Green under half, yellow under 80%, red beyond.
+        usage() {
+          local color=$'\e[32m'
+          if (( $2 >= 80 )); then color=$'\e[31m'; elif (( $2 >= 50 )); then color=$'\e[33m'; fi
+          printf '%s%s %s%%%s' "$dim" "$1" "$color$2" "$reset"
+        }
+
+        # --ignore-working-copy: don't snapshot on every refresh.
+        change=$(cd "$dir" 2>/dev/null && jj log -r @ --no-graph --color never \
+          --ignore-working-copy \
+          -T 'change_id.shortest(8) ++ " " ++ coalesce(description.first_line(), "(no description)")' \
+          2>/dev/null) || change=""
+
+        out="$model  ''${dir/#"$HOME"/\~}"
+        if [[ -n $change ]]; then out+="  $dim''${change%% *}$reset ''${change#* }"; fi
+        if [[ -n $five ]]; then
+          out+="  $(usage 5h "$five")"
+          if [[ -n $five_reset ]]; then out+="$dim ↻$(date -r "$five_reset" +%H:%M)$reset"; fi
+        fi
+        if [[ -n $week ]]; then out+="  $(usage 7d "$week")"; fi
+        printf '%s' "$out"
+      '';
+    };
   in {
     enable = true;
 
@@ -72,6 +114,11 @@ in {
       # Sessions work in per-session jj workspaces here (see
       # agent-conventions.md), whichever checkout they started in.
       permissions.additionalDirectories = [ "~/workplace/claude" ];
+
+      statusLine = {
+        type = "command";
+        command = lib.getExe statusline;
+      };
 
       # What `rex skill setup` would add, if settings.json weren't in the
       # store. Tells each session which Rex session and block it runs in.
