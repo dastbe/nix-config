@@ -36,6 +36,13 @@ in {
     pkgs.cachix
   ]);
 
+  # Machine-wide Bazel settings, read before each workspace's .bazelrc. Half
+  # the cores, so the machine stays usable while Bazel builds and tests.
+  home.file.".bazelrc".text = ''
+    common --local_resources=cpu=HOST_CPUS*.5
+    common --jobs=HOST_CPUS*.5
+  '';
+
   #---------------------------------------------------------------------
   # Programs
   #---------------------------------------------------------------------
