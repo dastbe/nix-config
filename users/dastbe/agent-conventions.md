@@ -32,6 +32,9 @@ when jj has no equivalent.
   checker, a full test suite, a large build) an explicit time limit: run it
   in the background and check on it, or under a watchdog. If it overruns,
   stop it and investigate rather than wait.
+- Keep the machine usable: don't run tools at full width on your own
+  (thread pools set to "auto", `-j` of every core). Use about half the
+  cores; slower is fine.
 
 ## Workspaces: one per Linear issue
 
