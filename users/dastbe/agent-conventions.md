@@ -20,6 +20,9 @@ when jj has no equivalent.
   a `fixup!` description is fine) instead of deleting code from the earlier
   one, and fold it in with `jj squash --into <rev>` once the stack's shape
   settles. Don't leave fixups on top.
+- Know which change `@` is before you edit: check `jj log -r @` in a stack.
+  After amending a change with `jj edit <rev>`, return to the tip
+  (`jj new <tip>`) before starting the next piece of work.
 - Push with `jj git push`. Ask before rewriting commits that are already on
   a remote, since that needs a force push.
 
