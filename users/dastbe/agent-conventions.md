@@ -26,6 +26,13 @@ when jj has no equivalent.
 - Push with `jj git push`. Ask before rewriting commits that are already on
   a remote, since that needs a force push.
 
+## Running commands
+
+- Give the first run of a command whose cost you haven't measured (a model
+  checker, a full test suite, a large build) an explicit time limit: run it
+  in the background and check on it, or under a watchdog. If it overruns,
+  stop it and investigate rather than wait.
+
 ## Workspaces: one per Linear issue
 
 Do the work for each Linear issue (see Work tracking below) in its own jj
