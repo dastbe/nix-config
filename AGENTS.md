@@ -22,7 +22,7 @@ via `lib/mksystem.nix`:
 - Build without activating:
   `nix build '.#darwinConfigurations.personal-macbook-air-m1.system' --no-link`
 - Check the flake: `nix flake check`
-- Format: `nix fmt`
+- Format: `nix fmt` (formats every `.nix` file in the repo)
 - Activating (`make switch NIXNAME=personal-macbook-air-m1`) changes the
   running system and needs sudo. Only switch when the user asks.
 - In a Rex terminal (`REX_BLOCK` is set), run the switch in a new pane
