@@ -36,6 +36,21 @@ when jj has no equivalent.
   (thread pools set to "auto", `-j` of every core). Use about half the
   cores; slower is fine.
 
+## Other agents
+
+- Run an agent as its own `claude` session, not an in-process subagent,
+  when it holds a role (an auditor, reviewer, or SME), runs a while, or
+  the user may want to watch or talk to it. In a Rex terminal
+  (`REX_SESSION` is set), start it in a new tab with
+  `rex window new -s "$REX_SESSION" <label> -c <dir> -- claude "Read <brief-file> and follow it."`,
+  or in a new session with `rex new` for unrelated work. Outside Rex, ask
+  the user where to start it.
+- Write the brief to a file, and have the agent report back with
+  SendMessage to your session's name. Keep the brief and its output files
+  outside the repo.
+- Use in-process subagents only for short, scoped lookups whose result
+  comes straight back to you.
+
 ## Workspaces: one per Linear issue
 
 Do the work for each Linear issue (see Work tracking below) in its own jj
