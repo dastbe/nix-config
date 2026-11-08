@@ -16,8 +16,10 @@ when jj has no equivalent.
 - Before describing or squashing into `@`, check `jj diff` and `jj log`:
   the working copy may already hold someone else's in-progress change, so
   start a new change instead of relabelling theirs.
-- Revise earlier changes with `jj edit <rev>` or `jj squash --into <rev>`
-  rather than piling fixups on top.
+- To undo or reshape part of a stack, add a new change (`jj new -A <rev>`;
+  a `fixup!` description is fine) instead of deleting code from the earlier
+  one, and fold it in with `jj squash --into <rev>` once the stack's shape
+  settles. Don't leave fixups on top.
 - Push with `jj git push`. Ask before rewriting commits that are already on
   a remote, since that needs a force push.
 
