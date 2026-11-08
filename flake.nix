@@ -15,20 +15,23 @@
     };
   };
 
-  outputs = { nixpkgs, ... }@inputs: let
-    # Overlays applied to every system. Add flake overlays here.
-    overlays = [ ];
+  outputs =
+    { nixpkgs, ... }@inputs:
+    let
+      # Overlays applied to every system. Add flake overlays here.
+      overlays = [ ];
 
-    mkSystem = import ./lib/mksystem.nix {
-      inherit overlays nixpkgs inputs;
-    };
-  in {
-    darwinConfigurations.personal-macbook-air-m1 = mkSystem "personal-macbook-air-m1" {
-      system = "aarch64-darwin";
-      user   = "dastbe";
-      darwin = true;
-    };
+      mkSystem = import ./lib/mksystem.nix {
+        inherit overlays nixpkgs inputs;
+      };
+    in
+    {
+      darwinConfigurations.personal-macbook-air-m1 = mkSystem "personal-macbook-air-m1" {
+        system = "aarch64-darwin";
+        user = "dastbe";
+        darwin = true;
+      };
 
-    formatter.aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixfmt-tree;
-  };
+      formatter.aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.nixfmt-tree;
+    };
 }
